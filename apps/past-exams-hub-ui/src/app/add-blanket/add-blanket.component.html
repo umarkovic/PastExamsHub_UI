@@ -1,0 +1,162 @@
+<body>
+  <main>
+    <mat-card *ngIf="data$ | async as data">
+      <section>
+        <div class="header">
+          <h2>Dodaj blanket</h2>
+        </div>
+
+        <form [formGroup]="form">
+          <div class="form-container">
+            <div class="form-field">
+              <mat-form-field appearance="outline" class="professor-select">
+                <mat-label>Ispitni rok</mat-label>
+                <mat-select formControlName="deadline">
+                  @for (examPeriod of data.examPeriods; track examPeriod) {
+                  <mat-option [value]="examPeriod.uid!">
+                    {{ examPeriod.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="professor-select">
+                <mat-label>Predmet</mat-label>
+                <mat-select formControlName="subject">
+                  @for ( subject of data.courses; track subject) {
+                  <mat-option [value]="subject.uid!">
+                    {{ subject.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Tip</mat-label>
+                <mat-select formControlName="type">
+                  @for (examType of examTypes; track examType) {
+                  <mat-option [value]="examType.value">
+                    {{ transformLabel(examType.label) }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Broj zadatka</mat-label>
+                <input
+                  matInput
+                  formControlName="numberTask"
+                  type="number"
+                  maxlength="2"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Datum</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  formControlName="date"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group upload-wrapper">
+                <!-- <mat-label>File:</mat-label>
+
+                <input
+                  type="file"
+                  #file
+                  placeholder="Choose file"
+                  (change)="uploadFile(file.files)"
+                  style="display: none"
+                />
+                <button mat-raised-button (click)="file.click()">
+                  Upload File
+                </button> -->
+
+                <div class="center">
+                  <ngx-file-drop
+                    dropZoneLabel="Drop files here"
+                    (onFileDrop)="dropped($event)"
+                  >
+                    <ng-template
+                      ngx-file-drop-content-tmp
+                      let-openFileSelector="openFileSelector"
+                    >
+                      Ubaci/Izaberi fajl
+                      <button
+                        color="primary"
+                        mat-raised-button
+                        (click)="openFileSelector()"
+                      >
+                        Upload
+                      </button>
+                    </ng-template>
+                  </ngx-file-drop>
+                  <div class="upload-table">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th *ngIf="showFile">Ime fajla:</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="upload-name-style">
+                        @for (item of files; track item) {
+
+                        <tr>
+                          <td>
+                            <strong
+                              >{{ item.relativePath }}
+                              <button
+                                *ngIf="showFile"
+                                mat-raised-button
+                                color="primary"
+                                (click)="displayFile()"
+                              >
+                                Prikaži
+                              </button></strong
+                            >
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Beleške </mat-label>
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="8"
+                  cdkAutosizeMaxRows="10"
+                  formControlName="note"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="btn-save-wrapper">
+            {{ message }}
+            <button color="primary" mat-raised-button (click)="save()">
+              Sačuvaj
+            </button>
+          </div>
+        </form>
+      </section>
+    </mat-card>
+  </main>
+</body>

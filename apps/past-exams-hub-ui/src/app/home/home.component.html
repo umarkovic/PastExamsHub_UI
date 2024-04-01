@@ -1,0 +1,144 @@
+<ng-container *ngIf="data$ | async as data">
+  <div class="grid-container1">
+    <div class="grid-items-stats mat-elevation-z2">
+      <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+        rel="stylesheet"
+      />
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css"
+        rel="stylesheet"
+      />
+
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row">
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body" style="cursor: pointer;" (click)="redirectToPage('blanketi')" >
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase mb-0">Blanketi</h5>
+                      <span class="h2 font-weight-bold mb-0">{{
+                        data.statistics.numberOfSolutions
+                      }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div
+                        class="icon icon-shape bg-danger text-white rounded-circle shadow"
+                      >
+                        <i class="fas fa-file-contract"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body" style="cursor: pointer;" (click)="redirectToPage('predmeti')">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase mb-0">Predmeti</h5>
+                      <span class="h2 font-weight-bold mb-0">{{
+                        data.statistics.numberOfCourses
+                      }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div
+                        class="icon icon-shape bg-warning text-white rounded-circle shadow"
+                      >
+                        <i class="fas fa-book"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body" style="cursor: pointer;" (click)="redirectToPage('studenti')">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase mb-0">Studenti</h5>
+                      <span class="h2 font-weight-bold mb-0">{{
+                        data.statistics.numberOfStudents
+                      }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div
+                        class="icon icon-shape bg-yellow rounded-circle shadow"
+                      >
+                        <i class="fas fa-user-graduate"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body" style="cursor: pointer;" (click)="redirectToPage('profesori')">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase mb-0">Profesori</h5>
+                      <span class="h2 font-weight-bold mb-0">{{
+                        data.statistics.numberOfTeachers
+                      }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div
+                        class="icon icon-shape bg-info text-white rounded-circle shadow"
+                      >
+                        <i class="fas fa-chalkboard-teacher"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-container">
+    @for (studyYear of studyYears; track studyYear) {
+    <div
+      class="grid-item mat-elevation-z2"
+      [ngClass]="{
+        first: studyYear.year === 1,
+        second: studyYear.year === 2,
+        third: studyYear.year === 3,
+        fourth: studyYear.year === 4
+      }"
+      (click)="navigateToStudyYearCourses(studyYear.year)"
+    >
+      {{ studyYear.name }}
+    </div>
+    }
+    <!-- <div class="grid-item first mat-elevation-z2" (click)="navigateToStudyYearCourses()">I godina</div>
+    <div class="grid-item second mat-elevation-z2" (click)="navigateToStudyYearCourses()">II godina</div>
+    
+    <div class="grid-item third mat-elevation-z2" (click)="navigateToStudyYearCourses()">III godina</div>
+    <div class="grid-item fourth mat-elevation-z2" (click)="navigateToStudyYearCourses()">IV godina</div> -->
+
+    <div class="flex-column side latestExams mat-elevation-z2">
+      <h2>Najnoviji blanketi</h2>
+      <div style="display: flex; gap: 16px; flex-direction: column">
+        <pastexamshub-table-scrolling-viewport
+          [itemSize]="10"
+          [totalItems]="items.length"
+          (itemsRangeChange)="updateSlice($event)"
+        >
+          @for (latestExam of data.latestExams.latestExams; track latestExam) {
+          <div class="card text-wrapper" (click)="redirectTo(latestExam.uid!)">
+            <b>{{ latestExam.courseName }}</b>
+            <span>{{ latestExam.examPeriodName }}</span>
+          </div>
+          }
+        </pastexamshub-table-scrolling-viewport>
+      </div>
+    </div>
+  </div>
+</ng-container>

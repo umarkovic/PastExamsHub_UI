@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  background-color: #673ab7;
+  main {
+    padding: 24px;
+    width: 40%;
+    background-color: #fff;
+    overflow-y: auto;
+    border-radius: 8px;
+
+    form {
+      // height: 50%;
+      
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .general-info {
+        display: flex;
+        gap: 16px;
+        mat-form-field {
+            flex: 1;
+        }
+      }
+    }
+
+    .signin-header {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 5%;
+    }
+
+    b {
+      font-size: 22px;
+    }
+  }
+}
+
+.passwords-match-container {
+    // margin-top: 32px;
+    padding: 8px;
+    border-radius: 4px;
+    background: rgba(244, 67, 54, 0.2);
+    mat-error {
+        font-size: 16px;
+    }
+}

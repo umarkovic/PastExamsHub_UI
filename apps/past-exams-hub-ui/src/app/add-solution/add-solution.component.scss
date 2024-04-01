@@ -1,0 +1,21 @@
+main {
+  background-color: #cbce91;
+  padding: 24px;
+  mat-card {
+    padding: 16px;
+    .wrapper {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      .full-width {
+        width: 100%;
+      }
+    }
+    .btn-wrapper {
+      display: flex;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+  }
+}

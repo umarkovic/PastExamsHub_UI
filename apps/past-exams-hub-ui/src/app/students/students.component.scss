@@ -1,0 +1,24 @@
+section {
+  margin: 24px;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #cbce91;
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+  }
+}
+.fullName {
+  font-weight: bold;
+}
+
+form {
+  display: flex;
+  gap: 16px;
+}

@@ -1,0 +1,104 @@
+<main *ngIf="data$ | async as data">
+  <mat-card>
+    <form [formGroup]="form">
+      <div class="wrapper">
+        <div
+          style="display: flex; flex-direction: column; width: 50%; gap: 24px"
+        >
+          <mat-slide-toggle
+            color="primary"
+            (click)="isShowNumberTask = !isShowNumberTask"
+            >Resenje za sve zadatke</mat-slide-toggle
+          >
+
+          <mat-form-field
+            appearance="outline"
+            class="full-width"
+            *ngIf="isShowNumberTask"
+          >
+            <mat-label>Broj zadatka</mat-label>
+            <input
+              matInput
+              formControlName="numberTask"
+              type="number"
+              maxlength="2"
+              min="1"
+              max="99"
+            />
+          </mat-form-field>
+
+          <div class="center">
+            <ngx-file-drop
+              dropZoneLabel="Drop files here"
+              (onFileDrop)="dropped($event)"
+            >
+              <ng-template
+                ngx-file-drop-content-tmp
+                let-openFileSelector="openFileSelector"
+              >
+                Ubaci/Izaberi fajl
+                <button
+                  color="primary"
+                  mat-raised-button
+                  (click)="openFileSelector()"
+                >
+                  Upload
+                </button>
+              </ng-template>
+            </ngx-file-drop>
+            <div class="upload-table">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th *ngIf="showFile">Ime fajla:</th>
+                  </tr>
+                </thead>
+
+                <tbody class="upload-name-style">
+                  @for (item of files; track item) {
+                  <tr>
+                    <td>
+                      <strong
+                        >{{ item.relativePath }}
+                        <button
+                          *ngIf="showFile"
+                          mat-raised-button
+                          color="primary"
+                          (click)="displayFile()"
+                        >
+                          Prikazi
+                        </button></strong
+                      >
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%">
+          <h1>Dodaj Resenje</h1>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Komentar resenja </mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="25"
+              cdkAutosizeMaxRows="35"
+              formControlName="commentSolution"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="btn-wrapper">
+      <button mat-raised-button (click)="cancel()">Odustani</button
+      ><button mat-raised-button color="primary" (click)="save()">
+        Sačuvaj
+      </button>
+    </div>
+  </mat-card>
+</main>

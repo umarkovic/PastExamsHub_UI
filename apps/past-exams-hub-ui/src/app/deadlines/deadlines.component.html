@@ -1,0 +1,139 @@
+<body>
+  <ng-container *ngIf="data$ | async as data">
+    <main>
+      <mat-card>
+        <section>
+          <h2>ROKOVI</h2>
+          <div class="justify-content-space-between">
+            <form [formGroup]="form">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'Search' }} </mat-label>
+                <input matInput autocomplete="on"  formControlName="search" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Period</mat-label>
+                <mat-select formControlName="period">
+                  @for (period of periods; track period) {
+                  <mat-option [value]="period.uid">
+                    {{ period.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </form>
+            <div class="btn-save-wrapper">
+              <button
+                *ngIf="currentUser.role !== 'Student'"
+                mat-raised-button
+                color="primary"
+                (click)="addEditDeadline()"
+              >
+                + Dodaj rok
+              </button>
+            </div>
+          </div>
+          <pastexamshub-table-scrolling-viewport
+            [itemSize]="10"
+            [totalItems]="items.length"
+            (itemsRangeChange)="updateSlice($event)"
+          >
+            <table
+              mat-table
+              [dataSource]="data.data.result!"
+              class="mat-elevation-z8"
+            >
+              <ng-container matColumnDef="nameDeadlines">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="nameDeadlinesHeader"
+                >
+                  {{ 'Naziv roka' }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="nameDeadlines">
+                  {{ element.name ?? '/' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="start">
+                <th mat-header-cell *matHeaderCellDef class="start">
+                  {{ 'Početak' }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="start">
+                  {{ (element.startDate | date : 'dd MMMM yyyy') ?? '/' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="end">
+                <th mat-header-cell *matHeaderCellDef class="end">
+                  {{ 'Kraj' }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="end">
+                  {{ (element.endDate | date : 'dd MMMM yyyy') ?? '/' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="duration">
+                <th mat-header-cell *matHeaderCellDef class="duration">
+                  {{ 'Trajanje (dani)' }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="duration">
+                  {{
+                    element.periodDayDuration
+                      ? element.periodDayDuration +
+                        (element.periodDayDuration === 1 ? ' dan' : ' dana')
+                      : '/'
+                  }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="action">
+                  {{ 'Akcije' }}
+                </th>
+                <td mat-cell *matCellDef="let element" class="action">
+                  <mat-icon
+                    *ngIf="currentUser.role !== 'Student'"
+                    class="material-symbols-outlined cursor"
+                    (click)="$event.stopPropagation(); addEditDeadline(element)"
+                    >edit</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="currentUser.role !== 'Student'"
+                    class="material-symbols-outlined cursor"
+                    (click)="$event.stopPropagation(); remove(element.uid)"
+                    >delete</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="currentUser.role === 'Student'"
+                    class="material-symbols-outlined cursor"
+                    >visibility</mat-icon
+                  >
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky: true"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                (click)="onRowClick(row)"
+              ></tr>
+            </table>
+          </pastexamshub-table-scrolling-viewport>
+          <mat-paginator
+            [length]="data.data.count"
+            [pageSize]="data.pageSize"
+            [pageSizeOptions]="[10, 20, 50]"
+            [showFirstLastButtons]="true"
+            (page)="updatePagination($event.pageIndex, $event.pageSize)"
+          >
+          </mat-paginator>
+        </section>
+      </mat-card>
+    </main>
+  </ng-container>
+</body>

@@ -1,0 +1,23 @@
+section {
+  margin: 24px;
+}
+body {
+  background: #cbce91;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #cbce91;
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+  }
+}
+
+.fullName
+{
+  font-weight: bold;
+}

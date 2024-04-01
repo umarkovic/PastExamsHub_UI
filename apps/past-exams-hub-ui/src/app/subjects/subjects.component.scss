@@ -1,0 +1,54 @@
+section {
+  margin: 24px;
+}
+
+body {
+  background: #cbce91;
+}
+
+.justify-content-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    margin-bottom: 22px;
+  }
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #cbce91;
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+.professor-select
+{
+  width: 300px;
+}
+.mat-header-cell {
+  font-size: 14px;
+}
+.nameSubject {
+  font-weight: bolder;
+}
+.mat-row:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+form {
+  display: flex;
+  gap: 16px;
+}

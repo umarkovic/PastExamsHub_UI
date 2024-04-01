@@ -1,0 +1,65 @@
+<main>
+  <ng-container *ngIf="data$ | async as data">
+    <ng-container *ngIf="data.exams?.length === 0; else exams">
+      <div class="no-data">
+        <h1>Nemate blankete</h1>
+      </div>
+    </ng-container>
+
+    <ng-template #exams>
+      <div class="row-center">
+        <h1 *ngIf="lastPage !== undefined">
+          Blanketi
+          <ng-container *ngIf="lastPage === 'predmeti'; else examPeriod">
+            iz predmeta: {{ data?.exams?.[0]?.courseName ?? 'Nepoznato' }}
+          </ng-container>
+          <ng-template #examPeriod>
+            u roku:
+            {{ (lastPage !== 'predmeti') ? (data?.exams?.[0]?.examPeriod?.name ?? 'Nepoznato') : '' }}
+          </ng-template>
+        </h1>
+        <h1 *ngIf="lastPage === undefined">Svi blanketi</h1>
+      </div>
+
+      <div class="container content-blanket">
+        <div class="row">
+          @for (item of data?.exams; track item ) {
+          <mat-card class="column">
+            <div class="row">{{ transformLabel(item.type!) }}</div>
+
+            <div class="row margin">
+              <div class="border-radius">
+                <span>{{ item.examDate | date : 'dd' }}</span>
+                <span>{{ item.examDate | date : 'MMM' }}</span>
+              </div>
+              <div class="course-name-wrapper">
+                <b>{{ item.courseName }}</b>
+                <span>{{
+                  item.studyYear + ' godina, ' + item.espb + ' ESPB'
+                }}</span>
+              </div>
+            </div>
+
+            <div>
+              <p>
+                Rok: <b>{{ item.examPeriod?.name }} </b>
+              </p>
+              <p>{{ item.courseType + ' predmet' }}</p>
+              <p>Broj zadataka: {{ item.numberOfTasks }}</p>
+            </div>
+            <div class="flex-end">
+              <button
+                color="primary"
+                mat-raised-button
+                (click)="redirectTo(item.examUid!)"
+              >
+                Pregled
+              </button>
+            </div>
+          </mat-card>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+</main>

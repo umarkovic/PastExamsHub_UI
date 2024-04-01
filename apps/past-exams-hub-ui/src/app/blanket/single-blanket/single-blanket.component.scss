@@ -1,0 +1,57 @@
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 24px;
+  background-color: #cbce91;
+  mat-card {
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    iframe {
+      height: calc(100vh - 140px);
+      width: 100%;
+    }
+  }
+}
+
+form {
+  width: 100%;
+}
+.full-width {
+  width: 100% !important;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.bold-text {
+  font-weight: bold;
+}
+
+.yellow {
+  color: #e9c400;
+}
+
+.red {
+  color: #e54c21;
+}
+
+.remove_circle {
+  color: #e54c21;
+}
+
+.add_circle {
+  color: #20a858;
+}
+
+.mat-icon {
+  margin-right: 0px !important;
+}
+
+.rating-header {
+  text-align: center;
+}

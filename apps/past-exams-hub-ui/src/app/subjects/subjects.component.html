@@ -1,0 +1,167 @@
+<ng-container *ngIf="data$ | async as data">
+  <main>
+    <mat-card>
+      <section>
+        <h2>PREDMETI</h2>
+        <div class="justify-content-space-between">
+          <form [formGroup]="form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Pretrazi</mat-label>
+              <input matInput formControlName="search" #input />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="tip-select">
+              <mat-label>Tip</mat-label>
+              <mat-select formControlName="type">
+                @for (type of types; track type) {
+                <mat-option [value]="type.uid!">
+                  {{ type.name }}
+                </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="professor-select">
+              <mat-label>Profesori</mat-label>
+              <mat-select formControlName="professor">
+                @for (professor of data.professorsData; track professor) {
+                <mat-option [value]="professor.uid!">
+                  {{ professor.fullName }}
+                </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </form>
+
+          <div class="btn-save-wrapper">
+            <button
+              *ngIf="currentUser.role !== 'Student'"
+              color="primary"
+              mat-raised-button
+              (click)="addEditSubject(data.professorsData!)"
+            >
+              + Dodaj predmet
+            </button>
+          </div>
+        </div>
+
+        <pastexamshub-table-scrolling-viewport
+          [itemSize]="10"
+          [totalItems]="items.length"
+          (itemsRangeChange)="updateSlice($event)"
+        >
+          <table
+            mat-table
+            [dataSource]="data.subjectData.data.result!"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="nameSubject">
+              <th mat-header-cell *matHeaderCellDef class="nameSubjectHeader">
+                {{ 'Naziv predmeta' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="nameSubject">
+                {{ element.name ?? '/' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef class="type">
+                {{ 'Tip' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="type">
+                {{ element.courseType ?? '/' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="professors">
+              <th mat-header-cell *matHeaderCellDef class="professors">
+                {{ 'Profesor' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="professors">
+                {{
+                  element.lecturerFirstName && element.lecturerLastName
+                    ? element.lecturerFirstName + ' ' + element.lecturerLastName
+                    : '/'
+                }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="studies">
+              <th mat-header-cell *matHeaderCellDef class="studies">
+                {{ 'Studije' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="studies">
+                {{ element.studies ?? 'OAS' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="year">
+              <th mat-header-cell *matHeaderCellDef class="year">
+                {{ 'Godina' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="year">
+                {{ element.studyYear ?? '/' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="espb">
+              <th mat-header-cell *matHeaderCellDef class="espb">
+                {{ 'ESPB' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="espb">
+                {{ element.espb ?? '/' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="action">
+                {{ 'Akcije' }}
+              </th>
+              <td mat-cell *matCellDef="let element" class="action">
+                <mat-icon
+                  *ngIf="currentUser.role !== 'Student'"
+                  class="material-symbols-outlined cursor"
+                  (click)="
+                    $event.stopPropagation();
+                    addEditSubject(data.professorsData!, element)
+                  "
+                  >edit</mat-icon
+                >
+                <mat-icon
+                  *ngIf="currentUser.role !== 'Student'"
+                  class="material-symbols-outlined cursor"
+                  (click)="$event.stopPropagation(); remove(element.uid)"
+                  >delete</mat-icon
+                >
+
+                <mat-icon
+                  *ngIf="currentUser.role === 'Student'"
+                  class="material-symbols-outlined cursor"
+                  >visibility</mat-icon
+                >
+              </td>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumns; sticky: true"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="onRowClick(row)"
+            ></tr>
+          </table>
+        </pastexamshub-table-scrolling-viewport>
+        <mat-paginator
+          [length]="data.subjectData.data.count"
+          [pageSize]="data.subjectData.pageSize"
+          [pageSizeOptions]="[10, 15, 20]"
+          [showFirstLastButtons]="true"
+          (page)="updatePagination($event.pageIndex, $event.pageSize)"
+        >
+        </mat-paginator>
+      </section>
+    </mat-card>
+  </main>
+</ng-container>

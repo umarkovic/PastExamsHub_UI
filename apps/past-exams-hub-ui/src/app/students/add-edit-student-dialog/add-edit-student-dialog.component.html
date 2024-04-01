@@ -1,0 +1,82 @@
+<div class="header-wrapper-dialog">
+  <h2 mat-dialog-title>
+    {{
+      data.data?.uid && !data.isVisibility
+        ? 'Izmeni Studenta'
+        : data.isVisibility
+        ? 'Prikaz'
+        : 'Dodaj Studenta'
+    }}
+  </h2>
+  <button mat-button (click)="closeDialog()">
+    <mat-icon class="material-symbols-outlined">close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form">
+  <div class="form-container">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" [readonly]="true" />
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ime</mat-label>
+        <input
+          matInput
+          formControlName="firstName"
+          [readonly]="data.isVisibility"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Prezime</mat-label>
+        <input
+          matInput
+          formControlName="lastName"
+          [readonly]="data.isVisibility"
+        />
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Index</mat-label>
+        <input
+          matInput
+          formControlName="index"
+          type="number"
+          [readonly]="data.isVisibility"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Godina</mat-label>
+        <input
+          matInput
+          formControlName="studyYear"
+          type="number"
+          [readonly]="data.isVisibility"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pol</mat-label>
+        <mat-select formControlName="gender">
+          @for (gender of genders; track gender) {
+          <mat-option [value]="gender.value" [disabled]="data.isVisibility">{{
+            gender.viewValue
+          }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="btn-save-wrapper" *ngIf="!data.isVisibility">
+    <button color="primary" mat-raised-button (click)="saveChanges()">
+      Sačuvaj
+    </button>
+  </div>
+</form>

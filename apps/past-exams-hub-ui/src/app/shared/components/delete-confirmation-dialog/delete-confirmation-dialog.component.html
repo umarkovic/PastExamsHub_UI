@@ -1,0 +1,11 @@
+<div class="header-wrapper-dialog">
+  <h2 mat-dialog-title></h2>
+  <button mat-button (click)="closeDialog()">
+    <mat-icon class="material-symbols-outlined"> close </mat-icon>
+  </button>
+</div>
+<mat-dialog-content>{{ data }}</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end">
+  <button mat-raised-button (click)="onNoClick()">Ne</button>
+  <button mat-raised-button color="primary" (click)="onYesClick()">Da</button>
+</mat-dialog-actions>

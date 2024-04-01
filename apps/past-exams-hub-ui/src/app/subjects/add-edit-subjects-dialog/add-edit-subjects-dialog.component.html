@@ -1,0 +1,68 @@
+<div class="header-wrapper-dialog">
+  <h2 mat-dialog-title>
+    {{
+      data.dataSubject && data.dataSubject.uid
+        ? 'Izmeni Predmet'
+        : 'Dodaj Predmet'
+    }}
+  </h2>
+  <button mat-button (click)="closeDialog()">
+    <mat-icon class="material-symbols-outlined">close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form">
+  <div class="form-container">
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ime</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="professor-select">
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="type">
+          @for (courseType of courseTypes; track courseType) {
+          <mat-option [value]="courseType.value">
+            {{ courseType.key }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="professor-select">
+        <mat-label>Odaberite profesora</mat-label>
+        <mat-select formControlName="professorUid">
+          @for (professor of professorsData; track professor) {
+          <mat-option [value]="professor.uid!">
+            {{ professor.fullName! }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="third-width">
+        <mat-label>Godina</mat-label>
+        <input matInput formControlName="year" type="number" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="third-width">
+        <mat-label>Semestar</mat-label>
+        <input matInput formControlName="semester" type="number" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="third-width">
+        <mat-label>ESPB bodovi</mat-label>
+        <input matInput formControlName="points" type="number" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="btn-save-wrapper">
+    <button mat-raised-button color="primary" (click)="saveChanges()">
+      Sačuvaj
+    </button>
+  </div>
+</form>

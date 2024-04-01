@@ -1,0 +1,67 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar>Meni</mat-toolbar>
+    <mat-list>
+      @for (menuItem of menuItems; track menuItem) {
+      <mat-list-item
+        matRipple
+        [routerLink]="menuItem.url"
+        routerLinkActive="active"
+      >
+        <mat-icon matListItemIcon>{{ menuItem.iconName }}</mat-icon>
+        <div matListItemTitle>{{ menuItem.text }}</div>
+      </mat-list-item>
+      }
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content >
+    <mat-toolbar color="primary">
+      @if (isHandset$ | async) {
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      }
+      <div class="e-appbar-spacer">
+        <img
+          src="../../assets/icons/navbar_icon_white.png"
+          width="55px"
+          height="45px"
+        />
+      </div>
+      <div class="gap">
+        <span>PAST EXAMS HUB</span> 
+        <span class="role-color-student" >{{ currentUser.role === 'Student' ? 'STUDENT' : '' }}</span>
+        <span class="role-color-teacher" >{{ currentUser.role === 'Teacher' ? 'PROFESOR' : '' }}</span>
+        <span class="role-color-admin" >{{ currentUser.role === 'Admin' ? 'ADMINISTRATOR' : '' }}</span>    
+      </div>
+      
+      <span class="example-spacer"></span>
+      <div class="gap">
+        <button mat-button (click)="addBlanket()">
+          <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
+          Dodaj blanket
+        </button>
+        <button mat-button (click)="profile()">
+          <mat-icon aria-hidden="false" fontIcon="person"></mat-icon>
+          Profil
+        </button>
+
+        <button mat-button (click)="logout()">Odjavi se</button>
+      </div>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

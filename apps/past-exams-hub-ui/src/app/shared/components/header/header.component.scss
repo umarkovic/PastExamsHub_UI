@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #dbdbdb;
+    line-height: 18px;
+    .welcome-text {
+      text-align: center;
+    }
+  }
+}

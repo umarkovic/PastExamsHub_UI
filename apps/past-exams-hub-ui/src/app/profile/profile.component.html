@@ -1,0 +1,103 @@
+<main>
+  <mat-card>
+    <mat-card-content *ngIf="data$ | async as data">
+      <div class="header">
+        <h1>{{ currentUser.role === 'Student' ? 'Student' : 'Profesor' }}</h1>
+      </div>
+      <form [formGroup]="form">
+        <div class="rows-wrapper">
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Ime</mat-label>
+              <input matInput formControlName="firstName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Prezime </mat-label>
+              <input matInput formControlName="lastName" />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Email </mat-label>
+              <input
+                matInput
+                formControlName="email"
+                type="email"
+                readonly="true"
+              />
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              *ngIf="currentUser.role !== 'Student'"
+            >
+              <mat-label>Pol</mat-label>
+              <mat-select formControlName="gender">
+                @for (gender of genders; track gender) {
+                <mat-option [value]="gender.value">{{
+                  gender.viewValue
+                }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              *ngIf="currentUser.role === 'Student'"
+            >
+              <mat-label>Index </mat-label>
+              <input matInput formControlName="index" type="number" />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              *ngIf="currentUser.role === 'Student'"
+            >
+              <mat-label>Pol</mat-label>
+              <mat-select formControlName="gender">
+                @for (gender of genders; track gender) {
+                <mat-option [value]="gender.value">{{
+                  gender.viewValue
+                }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              *ngIf="currentUser.role === 'Student'"
+            >
+              <mat-label>Godina studiranja</mat-label>
+              <input matInput formControlName="yearOfStudy" type="number" />
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              *ngIf="currentUser.role !== 'Student'"
+            >
+              <mat-label>Predmeti</mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="8"
+                cdkAutosizeMaxRows="10"
+                formControlName="courses"
+                readonly="true"
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="btn-save-wrapper">
+          <button color="primary" mat-raised-button (click)="submit()">
+            Sačuvaj
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</main>

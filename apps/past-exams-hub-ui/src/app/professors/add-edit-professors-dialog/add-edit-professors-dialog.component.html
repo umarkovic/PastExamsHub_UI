@@ -1,0 +1,58 @@
+<div class="header-wrapper-dialog" *ngIf="dataProfessor$ | async as data">
+  <h2 mat-dialog-title>
+    {{ dataUid ? 'Izmeni Profesora' : 'Dodaj Profesora' }}
+  </h2>
+  <button mat-button (click)="closeDialog()">
+    <mat-icon class="material-symbols-outlined">close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form">
+  <div class="form-container">
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" readonly="true" />
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ime</mat-label>
+        <input matInput formControlName="firstName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prezime</mat-label>
+        <input matInput formControlName="lastName" />
+      </mat-form-field>
+    </div>
+    <div class="form-row courses-wrapper" formArrayName="courses">
+      <h2>Predmeti koje profesor drzi</h2>
+
+      <!-- Check if courses array is null or empty -->
+      <ng-container *ngIf="!courses || courses.length === 0; else coursesList">
+        <h4>
+          Profesor trenutno ne drzi nijedan predmet ili nije uneto u sistem.
+        </h4>
+      </ng-container>
+
+      <ng-template #coursesList>
+        <!-- If courses array is not null or empty, iterate over the courses -->
+        <div
+          *ngFor="let course of courses.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Predmet</mat-label>
+            <input matInput formControlName="name" readonly="true" />
+          </mat-form-field>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="btn-save-wrapper">
+    <button mat-raised-button color="primary" (click)="saveChanges()">
+      Sačuvaj
+    </button>
+  </div>
+</form>

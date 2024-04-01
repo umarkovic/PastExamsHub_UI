@@ -1,0 +1,65 @@
+<main class="mat-elevation-z4">
+  <div style="height: 4px;">
+    <mat-progress-bar *ngIf="isSaving$ | async" mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div class="signin-header">
+    <pastexamshub-header imgSrc="../../assets/icons/logo-signin.png">
+    </pastexamshub-header>
+  </div>
+
+  <form (ngSubmit)="submit()" [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input
+        type="email"
+        inputmode="email"
+        formControlName="email"
+        matInput
+        placeholder="Unesite vas e-mail"
+      />
+      <mat-error *ngIf="form.controls.email.errors?.required"
+        >Obavezno.</mat-error
+      >
+      <mat-error *ngIf="form.controls.email.errors?.email"
+        >Unesite e-mail u ispravnom formatu.</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sifra</mat-label>
+      <input
+        matInput
+        placeholder="Unesite vasu sifru"
+        formControlName="password"
+        [type]="isPasswordVisible ? 'text' : 'password'"
+        autocomplete="on"
+        
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="passwordVisibilityChanged($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="isPasswordVisible"
+        [disabled]="(isSaving$ | async)!"
+      >
+        <mat-icon>{{
+          isPasswordVisible ? 'visibility' : 'visibility_off'
+        }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.controls.password.errors?.required"
+        >Obavezno.</mat-error
+      >
+      <mat-error *ngIf="form.controls.password.errors?.pattern"
+        >Lozinka mora imati barem jedno malo slovo, jedno veliko slovo, jedan
+        broj i jedan specijalni karakter.</mat-error
+      >
+    </mat-form-field>
+    <button style="margin-top: 24px;" type="submit" mat-raised-button color="primary" [disabled]="isSaving$ | async">PRIJAVI SE</button>
+
+    <div style="display: flex;
+    justify-content: center; align-items: center;">
+      <button mat-button color="primary" type="button" [disabled]="isSaving$ | async" (click)="navigateToSignUp()">Registruj se</button>
+    </div>
+  </form>
+</main>

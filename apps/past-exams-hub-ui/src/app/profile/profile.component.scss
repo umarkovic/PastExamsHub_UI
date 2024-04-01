@@ -1,0 +1,41 @@
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cbce91;
+  mat-card {
+    width: 80% !important;
+    height: 70% !important;
+
+    mat-card-content {
+      padding: 48px 16px 16px 16px;
+      height: 100%;
+      .header {
+        display: flex;
+        justify-content: center;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+        .btn-save-wrapper {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+      .rows-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+        .row {
+          display: flex;
+          gap: 24px;
+          mat-form-field {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

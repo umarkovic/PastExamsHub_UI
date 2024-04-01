@@ -1,0 +1,264 @@
+<main>
+  <ng-container *ngIf="data$ | async as data">
+    <mat-card>
+      <!-- <div style="width: 20%; margin-bottom: 16px">
+        <button color="primary" mat-raised-button (click)="goBack()">
+          Nazad
+        </button>
+      </div> -->
+
+      <div style="display: flex; width: 100%">
+        <div style="display: flex; width: 40%">
+          <iframe
+            *ngIf="fileData && isPdfFile; else img"
+            [src]="bypassAndSanitize(fileData)"
+            width="100%"
+            height="100%"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen
+          ></iframe>
+          <ng-template #img>
+            <img [src]="bypassAndSanitize(fileData)" />
+          </ng-template>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+            margin-left: 16px;
+          "
+        >
+          <div class="header">
+            <p style="font-size: 20px">
+              {{ data.userData.exam?.examPeriod?.name }}
+            </p>
+            <h1 style="margin-bottom: 6px">
+              {{ data.userData.exam?.courseName }}
+            </h1>
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <span>
+                {{
+                  transformLabel(data.userData.exam?.type!) +
+                    ', ' +
+                    (data.userData.exam?.numberOfTasks ?? 0) +
+                    ' ' +
+                    ((data.userData.exam?.numberOfTasks ?? 0) === 1
+                      ? 'zadatak'
+                      : (data.userData.exam?.numberOfTasks ?? 0) > 1 &&
+                        (data.userData.exam?.numberOfTasks ?? 0) < 5
+                      ? 'zadatka'
+                      : 'zadataka')
+                }}
+              </span>
+              <span>{{
+                data.userData.exam?.examDate | date : 'dd. MM. YYY'
+              }}</span>
+            </div>
+          </div>
+
+          <h2>Beleške</h2>
+          <form [formGroup]="form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Beleške </mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="8"
+                cdkAutosizeMaxRows="10"
+                formControlName="note"
+                readonly="true"
+              ></textarea>
+            </mat-form-field>
+          </form>
+          <div style="display: flex; justify-content: space-between">
+            <h2>Rešenja</h2>
+            <button
+              color="primary"
+              mat-raised-button
+              (click)="addSolutions(data.userData.exam?.examUid!)"
+            >
+              Dodaj rešenje
+            </button>
+          </div>
+          <div class="table">
+            <pastexamshub-table-scrolling-viewport
+              [itemSize]="5"
+              [totalItems]="items.length"
+              (itemsRangeChange)="updateSlice($event)"
+            >
+              <table
+                mat-table
+                [dataSource]="data.userData.solutions!"
+                class="mat-elevation-z8"
+              >
+                <ng-container matColumnDef="date">
+                  <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    class="date"
+                    class="date"
+                  >
+                    {{ 'Datum' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="date">
+                    {{
+                      element.createdDateTimeUtc | date : 'dd.MMM.YYYY' ?? '/'
+                    }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="owner">
+                  <th mat-header-cell *matHeaderCellDef class="owner">
+                    {{ 'Vlasnik' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="owner">
+                    <span [ngClass]="{'bold-text': element.ownerRole === 'Teacher'}">
+                      {{
+                        (element.ownerFirstName ? element.ownerFirstName : '') +
+                        ' ' +
+                        (element.ownerLastName ? element.ownerLastName : '') ||
+                        '/'
+                      }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="file">
+                  <th mat-header-cell *matHeaderCellDef class="file">
+                    {{ 'Fajl' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="file">
+                    <mat-icon
+                      class="material-symbols-outlined red"
+                      *ngIf="element.fileType === 'Document'"
+                    >
+                      picture_as_pdf
+                    </mat-icon>
+
+                    <mat-icon
+                      class="material-symbols-outlined yellow"
+                      *ngIf="element.fileType !== 'Document'"
+                    >
+                      image
+                    </mat-icon>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="taskNumber">
+                  <th mat-header-cell *matHeaderCellDef class="taskNumber">
+                    {{ 'Br. zadataka' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="taskNumber">
+                    {{
+                      element.taskNumber !== 'undefined'
+                        ? element.taskNumber === 0
+                          ? '/'
+                          : element.taskNumber
+                        : '/'
+                    }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rating">
+                  <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    class="rating rating-header"
+                  >
+                    {{ 'Ocena (broj ocena)' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="rating">
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div>
+                        <button
+                          *ngIf="currentUser.sub !== element.ownerUid"
+                          mat-button
+                          (click)="
+                            minusRating(element.uid, element.isAlreadyGraded)
+                          "
+                        >
+                          <mat-icon
+                            class="material-symbols-outlined remove_circle"
+                          >
+                            remove_circle
+                          </mat-icon>
+                        </button>
+                      </div>
+
+                      <div class="rating-table-wrapper">
+                        <span>{{ element.grade ?? '0' }}</span>
+                        <span>{{
+                          ' (' + (element.gradeCount ?? '0') + ')'
+                        }}</span>
+                      </div>
+
+                      <div>
+                        <button
+                          *ngIf="currentUser.sub !== element.ownerUid"
+                          mat-button
+                          (click)="
+                            plusRating(element.uid, element.isAlreadyGraded)
+                          "
+                        >
+                          <mat-icon
+                            class="material-symbols-outlined add_circle"
+                          >
+                            add_circle
+                          </mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="action">
+                    {{ 'Akcije' }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="action">
+                    <mat-icon
+                      class="material-symbols-outlined cursor"
+                      (click)="
+                        $event.stopPropagation(); redirectTo(element.uid)
+                      "
+                      >visibility</mat-icon
+                    >
+                    <mat-icon
+                      *ngIf="currentUser.sub === element.ownerUid"
+                      class="material-symbols-outlined cursor"
+                      (click)="
+                        $event.stopPropagation(); deleteSolution(element.uid)
+                      "
+                      >delete</mat-icon
+                    >
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+              </table>
+            </pastexamshub-table-scrolling-viewport>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </ng-container>
+</main>

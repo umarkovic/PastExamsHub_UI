@@ -1,0 +1,198 @@
+<main>
+  <ng-container *ngIf="data$ | async as data">
+    <mat-card>
+      <div style="display: flex; gap: 24px">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+            margin-left: 16px;
+          "
+        >
+          <div style="width: 20%">
+            <button color="primary" mat-raised-button (click)="goBack()">
+              Nazad
+            </button>
+          </div>
+          <div>
+            <div class="header">
+              <p style="font-size: 20px">
+                {{ data.solution?.periodName }}
+              </p>
+              <h1 style="margin-bottom: 6px">
+                {{ data.solution?.courseName }}
+              </h1>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <span>
+                  {{
+                    data.solution?.type +
+                      ', ' +
+                      (data.solution?.taskNumber ?? 0) +
+                      ' ' +
+                      ((data.solution?.taskNumber ?? 0) === 1
+                        ? 'zadatak'
+                        : (data.solution?.taskNumber ?? 0) > 1 &&
+                          (data.solution?.taskNumber ?? 0) < 5
+                        ? 'zadatka'
+                        : 'zadataka')
+                  }}
+                </span>
+
+                <span>{{
+                  data.solution?.createdDateTimeUtc | date : 'dd. MM. YYY'
+                }}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between">
+              <div>
+                <h1>
+                  Resenje kreirao:
+                  {{
+                    data.solution?.ownerFirstName +
+                      ' ' +
+                      data.solution?.ownerLastName
+                  }}
+                </h1>
+                <p *ngIf="currentUser.role === 'Student'">
+                  Student
+                  {{
+                    data.solution?.ownerStudyYear
+                      ? '- ' + data.solution?.ownerStudyYear + ' . godina'
+                      : ''
+                  }}
+                </p>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <p
+                  *ngIf="data.solution?.isAlreadyGraded === true"
+                  style="display: flex; gap: 16px; align-items: center"
+                >
+                  Ocenili ste sa
+
+                  <mat-icon
+                    class="material-symbols-outlined remove_circle"
+                    *ngIf="data.solution?.isPositiveGraded === false"
+                  >
+                    remove_circle
+                  </mat-icon>
+
+                  <mat-icon
+                    class="material-symbols-outlined add_circle"
+                    *ngIf="data.solution?.isPositiveGraded === true"
+                  >
+                    add_circle
+                  </mat-icon>
+                </p>
+                <p *ngIf="!data.solution?.isAlreadyGraded">
+                  {{
+                    currentUser.sub === data.solution?.ownerUid
+                      ? 'Ocena'
+                      : 'Oceni'
+                  }}
+                </p>
+                <div style="display: flex; align-items: center">
+                  <button
+                    *ngIf="currentUser.sub !== data.solution?.ownerUid"
+                    mat-button
+                    (click)="
+                      minusRating(
+                        data.solution?.uid!,
+                        data.solution?.isAlreadyGraded!
+                      )
+                    "
+                  >
+                    <mat-icon class="material-symbols-outlined remove_circle">
+                      remove_circle
+                    </mat-icon>
+                  </button>
+
+                  <div class="rating-table-wrapper">
+                    <span>{{ data.solution?.grade ?? '0' }}</span>
+                    <span>{{
+                      ' (' + (data.solution?.gradeCount ?? '0') + ')'
+                    }}</span>
+                  </div>
+
+                  <button
+                    *ngIf="currentUser.sub !== data.solution?.ownerUid"
+                    mat-button
+                    (click)="
+                      plusRating(
+                        data.solution?.uid!,
+                        data.solution?.isAlreadyGraded!
+                      )
+                    "
+                  >
+                    <mat-icon class="material-symbols-outlined add_circle">
+                      add_circle
+                    </mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form [formGroup]="form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Komentar </mat-label>
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="8"
+                cdkAutosizeMaxRows="10"
+                formControlName="comment"
+              ></textarea>
+            </mat-form-field>
+          </form>
+        </div>
+        <div
+          style="
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+          "
+        >
+          <div style="display: flex; width: 100%; justify-content: flex-start">
+            <h1>
+              {{
+                !data.solution?.taskNumber
+                  ? 'Rešenje'
+                  : 'Rešenje zadatka: ' + data.solution?.taskNumber
+              }}
+            </h1>
+          </div>
+          <div style="display: flex; width: 100%">
+            <iframe
+              *ngIf="fileData && isPdfFile; else img"
+              [src]="bypassAndSanitize(fileData)"
+              width="100%"
+              height="100%"
+              webkitallowfullscreen
+              mozallowfullscreen
+              allowfullscreen
+            ></iframe>
+            <ng-template #img>
+              <img [src]="bypassAndSanitize(fileData)" />
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </ng-container>
+</main>

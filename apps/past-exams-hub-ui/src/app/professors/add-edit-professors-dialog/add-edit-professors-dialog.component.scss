@@ -1,0 +1,45 @@
+.btn-save-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.header-wrapper-dialog {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.form-field,
+.full-width {
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.professor-select {
+  width: 80%;
+}
+
+.third-width {
+  width: 33%;
+}
+
+.courses-wrapper {
+  max-height: 300px;
+  min-height: fit-content; 
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px;
+}

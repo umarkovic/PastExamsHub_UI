@@ -1,0 +1,53 @@
+<div class="header-wrapper-dialog">
+  <h2 mat-dialog-title>{{ data?.uid ? 'Izmeni Rok' : 'Dodaj Rok' }}</h2>
+  <button mat-button (click)="closeDialog()">
+    <mat-icon class="material-symbols-outlined">close</mat-icon>
+  </button>
+</div>
+
+<form [formGroup]="form">
+  <div class="form-container">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ime</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="type">
+          @for (type of examPeriodTypes; track type) {
+          <mat-option [value]="type.value">
+            {{ type.value }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Početak roka</mat-label>
+        <input matInput [matDatepicker]="pickerStart" formControlName="start" />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Kraj roka</mat-label>
+        <input matInput [matDatepicker]="pickerEnd" formControlName="end" />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="btn-save-wrapper">
+    <button color="primary" mat-raised-button (click)="saveChanges()">
+      Sačuvaj
+    </button>
+  </div>
+</form>

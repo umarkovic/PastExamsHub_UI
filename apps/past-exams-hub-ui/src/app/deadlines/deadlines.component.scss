@@ -1,0 +1,37 @@
+section {
+  margin: 24px;
+}
+body {
+  background: #cbce91;
+}
+
+.justify-content-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    margin-bottom: 22px;
+  }
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #cbce91;
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+  }
+
+  .nameDeadlines {
+    font-weight: bolder;
+  }
+}
+
+form {
+  display: flex;
+  gap: 16px;
+}

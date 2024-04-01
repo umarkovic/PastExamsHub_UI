@@ -1,0 +1,132 @@
+<main class="mat-elevation-z4">
+    <div style="height: 4px;">
+        <mat-progress-bar *ngIf="isSaving$ | async" mode="indeterminate"></mat-progress-bar>
+      </div>
+  <div class="signin-header">
+    <pastexamshub-header imgSrc="../../assets/icons/logo-signin.png">
+    </pastexamshub-header>
+  </div>
+
+  <form (ngSubmit)="submit()" [formGroup]="form">
+    <div class="general-info">
+      <mat-form-field appearance="outline">
+        <mat-label>Ime</mat-label>
+        <input
+          type="text"
+          formControlName="firstName"
+          matInput
+          placeholder="Unesite vase ime"
+        />
+        <mat-error *ngIf="form.controls.firstName.errors?.required"
+          >Obavezno.</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Prezime</mat-label>
+        <input
+          type="text"
+          formControlName="lastName"
+          matInput
+          placeholder="Unesite vase prezime"
+        />
+        <mat-error *ngIf="form.controls.lastName.errors?.required"
+          >Obavezno.</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input
+        type="email"
+        inputmode="email"
+        formControlName="email"
+        matInput
+        placeholder="Unesite vas e-mail"
+      />
+      <mat-error *ngIf="form.controls.email.errors?.required"
+        >Obavezno.</mat-error
+      >
+      <mat-error *ngIf="form.controls.email.errors?.email"
+        >Unesite e-mail u ispravnom formatu.</mat-error
+      >
+    </mat-form-field>
+
+    <ng-container formGroupName="passwords">
+      <mat-form-field appearance="outline">
+        <mat-label>Sifra</mat-label>
+        <input
+          matInput
+          placeholder="Unesite vasu sifru"
+          formControlName="password"
+          [type]="isPasswordVisible ? 'text' : 'password'"
+          autocomplete="on"
+          
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="passwordVisibilityChanged($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="isPasswordVisible"
+          [disabled]="(isSaving$ | async)!" 
+        >
+          <mat-icon>{{
+            isPasswordVisible ? 'visibility' : 'visibility_off'
+          }}</mat-icon>
+        </button>
+        <mat-error *ngIf="passwords.controls.password.errors?.required"
+          >Obavezno.</mat-error
+        >
+        <mat-error *ngIf="passwords.controls.password.errors?.pattern"
+          >Lozinka mora imati barem jedno malo slovo, jedno veliko slovo, jedan
+          broj i jedan specijalni karakter.</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Potvrdjena sifra</mat-label>
+        <input
+          matInput
+          placeholder="Unesite potvrdu vase sifre"
+          formControlName="confirmPassword"
+          [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+          autocomplete="on"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="confirmPasswordVisibilityChanged($event)"
+          [attr.aria-label]="'Hide confirm password'"
+          [attr.aria-pressed]="isConfirmPasswordVisible"
+          [disabled]="(isSaving$ | async)!"
+        >
+          <mat-icon>{{
+            isConfirmPasswordVisible ? 'visibility' : 'visibility_off'
+          }}</mat-icon>
+        </button>
+        <mat-error *ngIf="passwords.controls.confirmPassword.errors?.required"
+          >Obavezno.</mat-error
+        >
+      </mat-form-field>
+
+      <div
+        class="passwords-match-container"
+        *ngIf="form.controls.passwords.errors?.passwordMatch && showValidation"
+      >
+        <mat-error> Obe sifre moraju biti iste. </mat-error>
+      </div>
+    </ng-container>
+
+    <mat-checkbox>Registruj se kao profesor</mat-checkbox>
+    <button
+      style="margin-top: 24px"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="isSaving$ | async"
+    >
+      REGISTRUJ SE
+    </button>
+  </form>
+</main>
